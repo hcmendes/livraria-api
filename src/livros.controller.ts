@@ -26,7 +26,7 @@ export class LivrosController {
 
   @Post()
   async criar(@Body() livro: Livro) {
-    this.livrosService.criar(livro);
+    return this.livrosService.criar(livro);
   }
 
   @Put()

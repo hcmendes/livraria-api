@@ -14,12 +14,12 @@ export class LivrosService {
     return this.livroModel.findAll();
   }
 
-  async  obterUm(id: number): Promise<Livro> {
+  async obterUm(id: number): Promise<Livro> {
     return this.livroModel.findByPk(id);
   }
 
-  async criar(livro: Livro) {
-    this.livroModel.create(livro);
+  async criar(livro: Livro): Promise<Livro> {
+    return this.livroModel.create(livro);
   }
 
   async alterar(livro: Livro): Promise<[number, Livro[]]> {
