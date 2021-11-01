@@ -4,12 +4,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LivrosController } from '../src/livros.controller';
 import { LivrosService } from '../src/livros.service';
 import { Livro } from '../src/livro.model';
+import { CreateLivroDTO } from '../src/create-livro.dto';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 describe('Livros', () => {
   let moduleRef: TestingModule;
   let app: INestApplication;
+
+  let savedLivro: Livro;
 
   beforeAll(async () => {
 
@@ -39,6 +42,16 @@ describe('Livros', () => {
 
     app = moduleRef.createNestApplication();
     await app.init();
+
+    const livroService = moduleRef.get<LivrosService>(LivrosService);
+
+    let savedLivroDTO = new CreateLivroDTO();
+    savedLivroDTO.codigo = 'LIV12';
+    savedLivroDTO.nome = '.NET Core';
+    savedLivroDTO.preco = 45.5;
+    
+    // salva livro na base para testes
+    savedLivro = await livroService.criar(savedLivroDTO);
   });
 
   afterAll(async () => {
@@ -47,33 +60,50 @@ describe('Livros', () => {
 
   it('/GET livros', async () => {
 
-    return request(app.getHttpServer())
+    const resGet = await request(app.getHttpServer())
       .get('/livros')
-      .expect(200)
-      .expect([]);
+      .expect(200);
+
+    expect(resGet.body?.length).toBe(1);
   });
 
   it('/GET livros/:id', async () => {
+
+    const resGet = await request(app.getHttpServer())
+      .get(`/livros/${savedLivro.id}`)
+      .expect(200)
+    expect(resGet.body.id).toBe(savedLivro.id);
+    expect(resGet.body.codigo).toBe(savedLivro.codigo);
+    expect(Number(resGet.body.preco)).toBeCloseTo(savedLivro.preco, 2);
+  });
+
+  it('/POST livros', async () => {
 
     let livro: any = {};
     livro.codigo = "LIV02";
     livro.nome = "C#";
     livro.preco = 49.90;
-    console.log({ livro });
 
     const resPost = await request(app.getHttpServer())
       .post('/livros')
       .send(livro)
       .expect(201)
-    expect(resPost.body).toBeTruthy();
+    expect(resPost.body?.id).toBeTruthy();
+  })
 
-    livro.id = resPost.body.id;
-    expect(livro.id).toBeTruthy();
+  it('/PUT livros/:id', async () => {
 
-    const resGet = await request(app.getHttpServer())
-      .get(`/livros/${livro.id}`)
+    let putLivroDTO: any = {};
+    putLivroDTO.id = savedLivro.id;
+    putLivroDTO.codigo = 'LIV13';
+    putLivroDTO.nome = 'HTML';
+    putLivroDTO.preco = 60.0;
+
+    const resPost = await request(app.getHttpServer())
+      .put(`/livros`)
+      .send(putLivroDTO)
       .expect(200)
-    expect(resGet.body.id).toBe(livro.id);
-  });
 
+    expect(resPost.body?.[0]).toBe(1);
+  })
 });

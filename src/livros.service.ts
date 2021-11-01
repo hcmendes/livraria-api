@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Livro } from './livro.model';
+import { CreateLivroDTO } from './create-livro.dto';
 
 @Injectable()
 export class LivrosService {
@@ -18,7 +19,7 @@ export class LivrosService {
     return this.livroModel.findByPk(id);
   }
 
-  async criar(livro: Livro): Promise<Livro> {
+  async criar(livro: CreateLivroDTO): Promise<Livro> {
     return this.livroModel.create(livro);
   }
 
@@ -26,7 +27,7 @@ export class LivrosService {
     return this.livroModel.update(livro, {
       where: {
         id: livro.id
-      }
+      },
     });
   }
 
