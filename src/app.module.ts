@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { Livro } from './livro.model';
 import { LivrosController } from './livros.controller';
 import { LivrosService } from './livros.service';
+import { ImagensModule } from './imagens/imagens.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { LivrosService } from './livros.service';
       synchronize: true,
     }),
     SequelizeModule.forFeature([Livro]),
+    ImagensModule,
   ],
   controllers: [AppController, LivrosController],
   providers: [AppService, LivrosService],

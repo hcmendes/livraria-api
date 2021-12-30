@@ -22,4 +22,10 @@ export class Livro extends Model<Livro> {
     allowNull: false,
   })
   preco: number;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  imagem: string;
 }
