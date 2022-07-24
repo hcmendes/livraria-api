@@ -1,6 +1,6 @@
 ## Description
 
-Uma API de livros simples criada com o framework Nest
+A simple books api created with Nest framework
 
 ## Installation
 
@@ -29,16 +29,6 @@ $ npm run start:prod
 
 Create the **config/config.json** file. The file must have the same structure as the **config/config.json.example** file.
 
-## Run pending migrations
-
-```bash
-node_modules/.bin/sequelize db:migrate
-```
-
-## Revert the last migration run
-
-```bash
-sequelize db:migrate:undo
 ```
 
 ## Test
